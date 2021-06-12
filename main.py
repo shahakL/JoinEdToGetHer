@@ -29,6 +29,9 @@ class App:
 
     def on_init(self):
         pygame.init()
+        pygame.mixer.init()
+        pygame.mixer.music.load("sound\minotaur_music.wav")
+        pygame.mixer.music.play(-1)
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
                                                       pygame.HWSURFACE | pygame.RESIZABLE)
@@ -109,6 +112,7 @@ class App:
         self.on_init()
 
         while self._running:
+            pygame.mixer.music.set_volume(self.get_music_volume())
             self.handle_key_presses()
             self.move_characters()
 
@@ -161,6 +165,9 @@ class App:
             bg_color = (0, 0, 0)
             font_color = (255, 0, 0)
             msg = "You killed Ed..."
+            pygame.mixer.music.load("sound\minotaur_roar.wav")
+            pygame.mixer.music.play(1)
+
         self._display_surf.fill(bg_color)
         myfont = pygame.font.SysFont("Comic Sans MS", 30)
         label = myfont.render(msg+"     Press space bar to play again", 1, font_color)
@@ -176,7 +183,13 @@ class App:
                     if event.key == pygame.K_SPACE:
                         done = True
 
-
+    def get_music_volume(self):
+        distances = [((self.player.position[0]-m.position[0])**2 + (self.player.position[1]-m.position[1])**2)**0.5 for m in self.monsters]
+        min_distance = min(distances)
+        print(min_distance)
+        if min_distance > 300:
+            return 0
+        return (300-min_distance)/300
 
 if __name__ == "__main__":
     app = App()
