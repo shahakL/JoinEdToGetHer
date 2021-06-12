@@ -5,9 +5,8 @@ from ai_character import AICharacter
 import random
 
 class FireFly(AICharacter):
-    def __init__(self, x, y, light):
-        super(FireFly, self).__init__(x, y, pygame.image.load("art/firefly.png"))
-        self._speed = 3
+    def __init__(self, x, y, speed, light):
+        super(FireFly, self).__init__(x, y, speed, pygame.image.load("art/firefly.png"))
         self._light = light
     
     def get_next_move(self):

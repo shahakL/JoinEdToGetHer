@@ -20,5 +20,5 @@ class Player(Character):
         if self._num_fireflies <= 0:
             return
         self._num_fireflies -= 1
-        new_firefly = FireFly(self._x, self._y, 10)
+        new_firefly = FireFly(self._x, self._y, speed=3, light=10)
         app.fireflies.append(new_firefly)

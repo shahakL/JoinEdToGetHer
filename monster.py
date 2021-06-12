@@ -28,5 +28,4 @@ class Monster(AICharacter):
         angle = math.atan2(self.vx,-self.vy)
         pi4 = math.pi/4
         direction = [K_UP, K_LEFT, K_DOWN, K_RIGHT][int(((int(angle / pi4) - 1) % 8) / 2)]
-        print(direction, self.vx, self.vy)
         return direction
