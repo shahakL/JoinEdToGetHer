@@ -30,7 +30,6 @@ class App:
         self.monsters = []
         self.fireflies = []
 
-    def on_init(self):
         pygame.init()
         pygame.mixer.init()
         pygame.mixer.music.load("sound\minotaur_music.wav")
@@ -124,8 +123,8 @@ class App:
 
             self.on_loop()
             self.on_render()
-            self.handle_end_cases()
-        self.show_score()
+            if self.handle_end_cases():
+                self.show_score()
         self.on_cleanup()
 
     def _stop(self, *args, **kwargs):
@@ -146,11 +145,12 @@ class App:
 
     def handle_end_cases(self):
         if any([self.are_touching(monster, self.player) for monster in self.monsters]):
-            self._running = False
             self.won = False
+            return True
         elif self.are_touching(self.princess, self.player):
-            self._running = False
             self.won = True
+            return True
+        return False
 
     def are_touching(self, c1, c2):
         l = 20
@@ -187,7 +187,7 @@ class App:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         done = True
-        self.on_execute()
+        self.on_init()
 
     def show_start_screen(self):
         black = (0,0,0)
@@ -213,7 +213,6 @@ class App:
     def get_music_volume(self):
         distances = [((self.player.position[0]-m.position[0])**2 + (self.player.position[1]-m.position[1])**2)**0.5 for m in self.monsters]
         min_distance = min(distances)
-        print(min_distance)
         if min_distance > 300:
             return 0
         return (300-min_distance)/300
