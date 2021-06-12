@@ -1,3 +1,4 @@
+from monster import Monster
 from pygame.locals import *
 import pygame
 from functools import partial
@@ -17,22 +18,26 @@ class App:
         self.maze = Maze(20, 20)
         [(y, x)] = self.maze.random_floor_position()
         self.player = Player(x, y)
+        self.monsters = []
 
     def on_init(self):
         pygame.init()
         self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
         self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
 
+        x, y = self.maze.random_floor_position()
+        self.monsters.append(Monster(x, y))
+
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
                                                      pygame.HWSURFACE | pygame.RESIZABLE)
-        self._running = True
-        self._player_surface = self._scale_image(self.player._rotated_image)
-        self._block_surf = self._scale_image(pygame.image.load("art\wall.png"))
+        self._player_surface = self._scale_image(self.player.get_surface())
+        self._block_surf = self._scale_image(pygame.image.load("art/wall.png"))
         self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
 
         pygame.display.set_caption('Join Ed To Get Her!')
         pygame.display.set_icon(self._player_surface)
+        self._running = True
 
     def handle_events(self):
         pygame.event.pump()
@@ -49,8 +54,13 @@ class App:
         fog2_radius = 140
         alpha=128
         self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
-        self._display_surf.blit(self._scale_image(self.player._rotated_image), (self.player._x, self.player._y))
+        self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
+        self.render_monsters()
         pygame.display.flip()
+
+    def render_monsters(self):
+        for monster in self.monsters:
+            self._display_surf.blit(self._scale_image(monster.get_surface()), monster.position)
 
     def on_cleanup(self):
         pygame.display.quit()
@@ -58,21 +68,28 @@ class App:
 
     def handle_key_presses(self):
         keys = pygame.key.get_pressed()
-        actions = {K_RIGHT: partial(self.try_movement, key=K_RIGHT),
-                   K_LEFT: partial(self.try_movement, key=K_LEFT),
-                   K_UP: partial(self.try_movement, key=K_UP),
-                   K_DOWN: partial(self.try_movement, key=K_DOWN),
+        actions = {K_RIGHT: partial(self.try_movement, key=K_RIGHT, character=self.player),
+                   K_LEFT: partial(self.try_movement, key=K_LEFT, character=self.player),
+                   K_UP: partial(self.try_movement, key=K_UP, character=self.player),
+                   K_DOWN: partial(self.try_movement, key=K_DOWN, character=self.player),
                    K_ESCAPE: self._stop}
 
         for key in actions.keys():
             if keys[key]:
                 actions[key]()
+    
+    def move_characters(self):
+        for monster in self.monsters:
+            next_move = monster.get_next_move()
+            if next_move:
+                self.try_movement(next_move, monster)
 
     def on_execute(self):
         self.on_init()
 
         while self._running:
             self.handle_key_presses()
+            self.move_characters()
 
             self.handle_events()
 
@@ -88,10 +105,10 @@ class App:
         new_height = 36#int(self.WINDOW_HEIGHT / 20)
         return pygame.transform.smoothscale(image, (new_width, new_height))
 
-    def try_movement(self, key):
-        future_pos = self.player.check_future_position(key)
+    def try_movement(self, key, character):
+        future_pos = character.check_future_position(key)
         if self.maze.check_empty(future_pos):
-            self.player.move(key)
+            character.move(key)
 
 
 if __name__ == "__main__":
