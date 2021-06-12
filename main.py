@@ -95,7 +95,9 @@ class App:
                 continue
             next_move = firefly.get_next_move()
             if next_move:
-                self.try_movement(next_move, firefly)
+                did_move = self.try_movement(next_move, firefly)
+                if not did_move:
+                    firefly.reset_inertia()
 
     def on_execute(self):
         self.on_init()
@@ -122,6 +124,9 @@ class App:
         future_pos = character.check_future_position(key)
         if self.maze.check_empty(future_pos):
             character.move(key)
+            return True
+        else:
+            return False
 
 
 if __name__ == "__main__":
