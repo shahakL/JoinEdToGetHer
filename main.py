@@ -12,7 +12,7 @@ class App:
 
         self._running = True
         self._display_surf = None
-        self._image_surf = None
+        self._player_surface = None
         self._block_surf = None
         self.player = Player()
         self.maze = Maze(10, 10)
@@ -25,13 +25,13 @@ class App:
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
                                                      pygame.HWSURFACE | pygame.RESIZABLE)
         self._running = True
-        self._image_surf = self._scale_image(pygame.image.load("art\survivor-idle_shotgun_0.png"))
+        self._player_surface = self._scale_image(self.player._rotated_image)
         self._block_surf = self._scale_image(pygame.image.load("art\wall.png"))
         self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
 
         pygame.display.set_caption('Join Ed To Get Her!')
-        pygame.display.set_icon(self._image_surf)
+        pygame.display.set_icon(self._player_surface)
 
     def handle_events(self):
         pygame.event.pump()
@@ -46,7 +46,7 @@ class App:
         self._display_surf.fill((0, 0, 0))
         fog_radius = 100
         self.maze.draw(self._display_surf, self.player, fog_radius, self._block_surf, self._fog_surf, self._floor_surf)
-        self._display_surf.blit(self._image_surf, (self.player._x, self.player._y))
+        self._display_surf.blit(self._scale_image(self.player._rotated_image), (self.player._x, self.player._y))
         pygame.display.flip()
 
     def on_cleanup(self):
