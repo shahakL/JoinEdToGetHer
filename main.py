@@ -30,10 +30,14 @@ class App:
         self.monsters = []
         self.fireflies = []
 
+    def on_init(self):
         pygame.init()
+        pygame.mixer.init()
+        pygame.mixer.music.load("sound\minotaur_music.wav")
+        pygame.mixer.music.play(-1)
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
-                                                     pygame.HWSURFACE | pygame.RESIZABLE)
+                                                      pygame.HWSURFACE | pygame.RESIZABLE)
         self._player_surface = self._scale_image(self.player.get_surface())
         self._block_surf = self._scale_image(pygame.image.load("art/wall.png"))
         self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
@@ -112,6 +116,7 @@ class App:
         self.show_start_screen()
 
         while self._running:
+            pygame.mixer.music.set_volume(self.get_music_volume())
             self.handle_key_presses()
             self.move_characters()
 
@@ -165,6 +170,9 @@ class App:
             bg_color = (0, 0, 0)
             font_color = (255, 0, 0)
             msg = "You killed Ed! Press Enter to start over..."
+            pygame.mixer.music.load("sound\minotaur_roar.wav")
+            pygame.mixer.music.play(1)
+
         self._display_surf.fill(bg_color)
         myfont = pygame.font.SysFont("Papyrus", 30)
         label = myfont.render(msg, 1, font_color)
@@ -202,6 +210,13 @@ class App:
                     if event.key == pygame.K_RETURN:
                         done = True
 
+    def get_music_volume(self):
+        distances = [((self.player.position[0]-m.position[0])**2 + (self.player.position[1]-m.position[1])**2)**0.5 for m in self.monsters]
+        min_distance = min(distances)
+        print(min_distance)
+        if min_distance > 300:
+            return 0
+        return (300-min_distance)/300
 
 if __name__ == "__main__":
     app = App()
