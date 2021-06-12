@@ -9,7 +9,7 @@ import random
 class Princess(AICharacter):
 
     def __init__(self, x, y, image):
-        super(Princess, self).__init__(x, y, 1, image)
+        super(Princess, self).__init__(x, y, speed=1, inertia_size=10, image=image)
         self.ax = 0
         self.ay = 0
         self.vx = 0

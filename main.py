@@ -21,7 +21,8 @@ class App:
         self.maze = Maze(18, 32)
         [player_pos, princess_pos] = self.maze.random_floor_position(2)
         self.player = Player(player_pos[1], player_pos[0])
-        self.princess = Princess(princess_pos[1], princess_pos[0], self._scale_image(pygame.image.load("art/princess.png")))
+        self.princess = Princess(princess_pos[1], princess_pos[0],
+                                 self._scale_image(pygame.image.load("art/princess.png")))
         self.monsters = []
         self.fireflies = []
 
@@ -36,8 +37,9 @@ class App:
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
         self._monster_surf = self._scale_image(pygame.image.load("art/minotaur.png"))
 
-        y, x = self.maze.random_floor_position()[0]
-        self.monsters.append(Monster(x, y, image=self._monster_surf))
+        positions = self.maze.random_floor_position(50)
+        for (y, x) in positions:
+            self.monsters.append(Monster(x, y, image=self._monster_surf))
 
         pygame.display.set_caption('Join Ed To Get Her!')
         pygame.display.set_icon(self._player_surface)
@@ -56,8 +58,9 @@ class App:
         self._display_surf.fill((0, 0, 0))
         fog1_radius = 100
         fog2_radius = 140
-        alpha=128
-        self.maze.draw(self._display_surf, self.player, self.princess, self.fireflies, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
+        alpha = 128
+        self.maze.draw(self._display_surf, self.player, self.princess, self.fireflies, fog1_radius, fog2_radius,
+                       self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
         self.render_fireflies()
         pygame.display.flip()
@@ -82,7 +85,7 @@ class App:
         for key in actions.keys():
             if keys[key]:
                 actions[key]()
-    
+
     def move_characters(self):
         pnv = self.princess.get_next_move()
         if pnv:
@@ -119,8 +122,8 @@ class App:
         self._running = False
 
     def _scale_image(self, image):
-        new_width = 36#int(self.WINDOW_WIDTH / 20)
-        new_height = 36#int(self.WINDOW_HEIGHT / 20)
+        new_width = 36  # int(self.WINDOW_WIDTH / 20)
+        new_height = 36  # int(self.WINDOW_HEIGHT / 20)
         return pygame.transform.smoothscale(image, (new_width, new_height))
 
     def try_movement(self, key, character):
@@ -132,7 +135,13 @@ class App:
             return False
 
     def handle_end_cases(self):
-        pass
+        if any([self.are_touching(monster, self.player) for monster in self.monsters]):
+            print('YOU LOSE!')
+        elif self.are_touching(self.princess, self.player):
+            print('YOU WIN!')
+
+    def are_touching(self, c1, c2):
+        return c1.position == c2.position
 
 
 if __name__ == "__main__":
