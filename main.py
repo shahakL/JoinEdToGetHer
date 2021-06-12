@@ -10,7 +10,8 @@ from maze import Maze
 class App:
 
     def __init__(self):
-
+        self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
+        self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
         self._running = True
         self._display_surf = None
         self._player_surface = None
@@ -22,8 +23,6 @@ class App:
 
     def on_init(self):
         pygame.init()
-        self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
-        self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
 
         y, x = self.maze.random_floor_position()[0]
         self.monsters.append(Monster(x, y))
@@ -51,7 +50,7 @@ class App:
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
         fog1_radius = 100
-        fog2_radius = 140
+        fog2_radius = 1400
         alpha=128
         self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)

@@ -43,14 +43,14 @@ def neighbours(maze, cell):
         cells.append((cell[0], cell[1] - 1))
     if cell[1] < len(maze[0]) - 1:
         cells.append((cell[0], cell[1] + 1))
-    if cell[0]<len(maze)-1 and cell[1]<len(maze[0])-1:
-        cells.append((cell[0]+1, cell[1]+1))
-    if cell[0]<len(maze)-1 and cell[1]>0:
-        cells.append((cell[0]+1, cell[1]-1))
-    if cell[0]>0 and cell[1]<len(maze[0])-1:
-        cells.append((cell[0]-1, cell[1]+1))
-    if cell[0]>0 and cell[1]>0:
-        cells.append((cell[0]-1, cell[1]-1))
+    # if cell[0]<len(maze)-1 and cell[1]<len(maze[0])-1:
+    #     cells.append((cell[0]+1, cell[1]+1))
+    # if cell[0]<len(maze)-1 and cell[1]>0:
+    #     cells.append((cell[0]+1, cell[1]-1))
+    # if cell[0]>0 and cell[1]<len(maze[0])-1:
+    #     cells.append((cell[0]-1, cell[1]+1))
+    # if cell[0]>0 and cell[1]>0:
+    #     cells.append((cell[0]-1, cell[1]-1))
     return cells
 
 
@@ -73,7 +73,7 @@ def regenerate_random_maze(maze):
         current_wall = random.choice(list(walls_wl))
         neighs = neighbours(maze, current_wall)
         wall_neighs = list(filter(lambda neigh: maze[neigh[0]][neigh[1]] == 2, neighs))
-        if len(wall_neighs) > 2:
+        if len(wall_neighs) > 1:
             maze[current_wall[0]][current_wall[1]] = 0
             walls_wl.update(wall_neighs)
         walls_wl.remove(current_wall)

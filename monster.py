@@ -1,17 +1,32 @@
+import math
+
 from pygame.constants import *
 import pygame
 from character import Character
 import random
 
+
 class Monster(Character):
 
     def __init__(self, x, y):
-        super(Monster, self).__init__(x, y, pygame.image.load("art\minotaur.png"))
-        self._speed = 2
+        super(Monster, self).__init__(x, y, 1, pygame.image.load("art\minotaur.png"))
+        self.ax = 0
+        self.ay = 0
+        self.vx = 0
+        self.vy = 0
+        self.acceleration = 3
     
     def get_next_move(self):
-        prob_do_nothing = 0.95
-        if random.random() > prob_do_nothing:
-            return random.choice([K_UP, K_DOWN, K_RIGHT, K_LEFT])
-
-
+        rand = random.random()*2*math.pi
+        self.ax += math.cos(rand) * self.acceleration
+        self.ay += math.sin(rand) * self.acceleration
+        self.vx += self.ax
+        self.vy += self.ay
+        norm = (self.vx**2+self.vy**2)**0.5
+        self.vx = self.vx/norm
+        self.vy = self.vy/norm
+        angle = math.atan2(self.vx,-self.vy)
+        pi4 = math.pi/4
+        direction = [K_UP, K_LEFT, K_DOWN, K_RIGHT][int(((int(angle / pi4) - 1) % 8) / 2)]
+        print(direction, self.vx, self.vy)
+        return direction
