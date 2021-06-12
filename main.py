@@ -16,7 +16,7 @@ class App:
         self._display_surf = None
         self._player_surface = None
         self._block_surf = None
-        self.maze = Maze(20, 20)
+        self.maze = Maze(18, 32)
         [(y, x)] = self.maze.random_floor_position()
         self.player = Player(x, y)
         self.monsters = []
@@ -50,7 +50,7 @@ class App:
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
         fog1_radius = 100
-        fog2_radius = 1400
+        fog2_radius = 140
         alpha=128
         self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
