@@ -25,7 +25,7 @@ class App:
         self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
         self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
 
-        x, y = self.maze.random_floor_position()
+        y, x = self.maze.random_floor_position()[0]
         self.monsters.append(Monster(x, y))
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
