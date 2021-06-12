@@ -5,6 +5,7 @@ from functools import partial
 
 from player import Player
 from maze import Maze
+from princess import Princess
 
 
 class App:
@@ -18,8 +19,9 @@ class App:
         self._block_surf = None
         self._monster_surf = None
         self.maze = Maze(18, 32)
-        [(y, x)] = self.maze.random_floor_position()
-        self.player = Player(x, y)
+        [player_pos, princess_pos] = self.maze.random_floor_position(2)
+        self.player = Player(player_pos[1], player_pos[0])
+        self.princess = Princess(princess_pos[1], princess_pos[0], self._scale_image(pygame.image.load("art/princess.png")))
         self.monsters = []
         self.fireflies = []
 
@@ -57,7 +59,7 @@ class App:
         fog1_radius = 100
         fog2_radius = 140
         alpha=128
-        self.maze.draw(self._display_surf, self.player, self.fireflies, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
+        self.maze.draw(self._display_surf, self.player, self.princess, self.fireflies, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
         self.render_fireflies()
         pygame.display.flip()
@@ -84,6 +86,9 @@ class App:
                 actions[key]()
     
     def move_characters(self):
+        pnv = self.princess.get_next_move()
+        if pnv:
+            self.try_movement(pnv, self.princess)
         for monster in self.monsters:
             next_move = monster.get_next_move()
             if next_move:
@@ -102,6 +107,7 @@ class App:
         while self._running:
             self.handle_key_presses()
             self.move_characters()
+            self.handle_end_cases()
 
             self.handle_events()
 
@@ -121,6 +127,9 @@ class App:
         future_pos = character.check_future_position(key)
         if self.maze.check_empty(future_pos):
             character.move(key)
+
+    def handle_end_cases(self):
+        pass
 
 
 if __name__ == "__main__":
