@@ -1,23 +1,31 @@
 from pygame.constants import *
+import pygame
 
 
 class Player:
+
+    _PLAYER_IMAGE = pygame.image.load("art\survivor-idle_shotgun_0.png")
     def __init__(self):
         self._x = 44
         self._y = 44
         self._speed = 0.3
+        self._rotated_image = self._PLAYER_IMAGE
  
     def _move_right(self):
         self._x = self._x + self._speed
+        self._rotated_image = self._PLAYER_IMAGE
  
     def _move_left(self):
         self._x = self._x - self._speed
+        self._rotated_image = pygame.transform.rotate(self._PLAYER_IMAGE, 180)
  
     def _move_up(self):
         self._y = self._y - self._speed
- 
+        self._rotated_image = pygame.transform.rotate(self._PLAYER_IMAGE, 90)
+         
     def _move_down(self):
         self._y = self._y + self._speed
+        self._rotated_image = pygame.transform.rotate(self._PLAYER_IMAGE, -90)
 
     @property
     def position(self):
@@ -42,3 +50,6 @@ class Player:
                            K_UP: self._move_up,
                            K_DOWN: self._move_down}
         key_to_movement[key]()
+
+    def get_surface(self):
+        return self._rotated_image
