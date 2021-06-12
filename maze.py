@@ -12,7 +12,7 @@ class Maze:
         self.M = rows
         self.N = cols
         self.maze = generate_random_maze(self.M, self.N)
-        self.LX = 44
+        self.LX = 36
         self.LY = 36
 
     def draw(self, display_surf, player, fog1_radius, fog2_radius, sprite_wall, sprite_fog1, sprite_fog2, sprite_floor):
@@ -38,7 +38,6 @@ class Maze:
         right_down_pos = (y + self.LY - 1, x + self.LX - 1)
         positions = [left_up_pos, left_down_pos, right_up_pos, right_down_pos]
         is_floor = [self.is_floor_at(py, px) for (py, px) in positions]
-        print((y, x), list(zip(positions, is_floor)))
         return all(is_floor)
 
     def is_floor_at(self, y, x):

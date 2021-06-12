@@ -8,7 +8,7 @@ class Player:
     def __init__(self, x, y):
         self._x = x
         self._y = y
-        self._speed = 3
+        self._speed = 1
         self._rotated_image = self._PLAYER_IMAGE
  
     def _move_right(self):
