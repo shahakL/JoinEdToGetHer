@@ -89,7 +89,10 @@ class App:
             next_move = monster.get_next_move()
             if next_move:
                 self.try_movement(next_move, monster)
-        for firefly in self.fireflies:
+        for i, firefly in enumerate(self.fireflies):
+            if firefly.light <= 0:
+                self.fireflies.pop(i)
+                continue
             next_move = firefly.get_next_move()
             if next_move:
                 self.try_movement(next_move, firefly)
