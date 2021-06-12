@@ -1,11 +1,11 @@
 import math
 
 from pygame.constants import *
-from character import Character
+
+from ai_character import AICharacter
 import random
 
-
-class Monster(Character):
+class Monster(AICharacter):
 
     def __init__(self, x, y, image):
         super(Monster, self).__init__(x, y, 1, image)

@@ -5,8 +5,8 @@ import pygame
 from MazeGenerator import generate_random_maze, regenerate_random_maze, find_indices
 
 
-def in_fog(y, x, player, fog_radius):
-    return (y - player.position[1]) ** 2 + (x - player.position[0]) ** 2 > fog_radius ** 2
+def in_fog(y, x, player, fireflies, fog_radius):
+    return all((y - c.position[1]) ** 2 + (x - c.position[0]) ** 2 > fog_radius ** 2 for c in fireflies + [player])
 
 
 def blit_alpha(source, target, opacity, location):
@@ -24,12 +24,12 @@ class Maze:
         self.LX = 36
         self.LY = 36
 
-    def draw(self, display_surf, player, fog1_radius, fog2_radius, sprite_wall, alpha, sprite_fog, sprite_floor, monsters):
+    def draw(self, display_surf, player, fireflies, fog1_radius, fog2_radius, sprite_wall, alpha, sprite_fog, sprite_floor, monsters):
         for row in range(self.M):
             for col in range(self.N):
-                if in_fog(self.LY * row, self.LX * col, player, fog2_radius):
+                if in_fog(self.LY * row, self.LX * col, player, fireflies, fog2_radius):
                     display_surf.blit(sprite_fog, (col * self.LX, row * self.LY))
-                elif in_fog(self.LY * row, self.LX * col, player, fog1_radius):
+                elif in_fog(self.LY * row, self.LX * col, player, fireflies, fog1_radius):
                     if self.maze[row][col] == 1:
                         blit_alpha(display_surf, sprite_wall, alpha, (col * self.LX, row * self.LY))
                     else:
