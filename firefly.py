@@ -6,7 +6,7 @@ import random
 import time
 
 class FireFly(AICharacter):
-    def __init__(self, x, y, speed, inertia_size=40, light=10):
+    def __init__(self, x, y, speed=3, inertia_size=40, light=100):
         super(FireFly, self).__init__(x, y, speed, inertia_size, image=pygame.image.load("art/firefly.png"))
         self._init_light = light
         self._light = light
