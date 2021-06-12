@@ -29,6 +29,8 @@ class App:
                                  self._scale_image(pygame.image.load("art/princess.png")))
         self.monsters = []
         self.fireflies = []
+
+    def on_init(self):
         pygame.init()
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
@@ -93,7 +95,7 @@ class App:
         if pnv:
             self.try_movement(pnv, self.princess)
         for monster in self.monsters:
-            next_move = monster.get_next_move()
+            next_move = monster.get_next_move(self.player.position)
             if next_move:
                 self.try_movement(next_move, monster)
         for i, firefly in enumerate(self.fireflies):
