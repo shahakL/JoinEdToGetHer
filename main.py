@@ -19,6 +19,7 @@ class App:
         [(y, x)] = self.maze.random_floor_position()
         self.player = Player(x, y)
         self.monsters = []
+        self.fireflies = []
 
     def on_init(self):
         pygame.init()
@@ -53,14 +54,19 @@ class App:
         fog1_radius = 100
         fog2_radius = 140
         alpha=128
-        self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
+        self.maze.draw(self._display_surf, self.player, self.fireflies, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
         self.render_monsters()
+        self.render_fireflies()
         pygame.display.flip()
 
     def render_monsters(self):
         for monster in self.monsters:
             self._display_surf.blit(self._scale_image(monster.get_surface()), monster.position)
+    
+    def render_fireflies(self):
+        for firefly in self.fireflies:
+            self._display_surf.blit(self._scale_image(firefly.get_surface()), firefly.position)
 
     def on_cleanup(self):
         pygame.display.quit()
@@ -72,6 +78,7 @@ class App:
                    K_LEFT: partial(self.try_movement, key=K_LEFT, character=self.player),
                    K_UP: partial(self.try_movement, key=K_UP, character=self.player),
                    K_DOWN: partial(self.try_movement, key=K_DOWN, character=self.player),
+                   K_SPACE: partial(self.player.action, key=K_SPACE, app=self),
                    K_ESCAPE: self._stop}
 
         for key in actions.keys():
@@ -83,6 +90,10 @@ class App:
             next_move = monster.get_next_move()
             if next_move:
                 self.try_movement(next_move, monster)
+        for firefly in self.fireflies:
+            next_move = firefly.get_next_move()
+            if next_move:
+                self.try_movement(next_move, firefly)
 
     def on_execute(self):
         self.on_init()

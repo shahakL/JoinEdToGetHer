@@ -4,15 +4,13 @@ import pygame
 from ai_character import AICharacter
 import random
 
-class Monster(AICharacter):
-
-    def __init__(self, x, y):
-        super(Monster, self).__init__(x, y, pygame.image.load("art\minotaur.png"))
-        self._speed = 2
+class FireFly(AICharacter):
+    def __init__(self, x, y, light):
+        super(FireFly, self).__init__(x, y, pygame.image.load("art/firefly.png"))
+        self._speed = 3
+        self._light = light
     
     def get_next_move(self):
         prob_do_nothing = 0.95
         if random.random() > prob_do_nothing:
             return random.choice([K_UP, K_DOWN, K_RIGHT, K_LEFT])
-
-
