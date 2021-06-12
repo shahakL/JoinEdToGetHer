@@ -1,27 +1,28 @@
-class Maze:
-    def __init__(self):
-       self.M = 10
-       self.N = 8
-       self.maze = [ 1,1,1,1,1,1,1,1,1,1,
-                     1,0,0,0,0,0,0,0,0,1,
-                     1,0,0,0,0,0,0,0,0,1,
-                     1,0,1,1,1,1,1,1,0,1,
-                     1,0,1,0,0,0,0,0,0,1,
-                     1,0,1,0,1,1,1,1,0,1,
-                     1,0,0,0,0,0,0,0,0,1,
-                     1,1,1,1,1,1,1,1,1,1,]
+from MazeGenerator import generate_random_maze
 
-    def draw(self,display_surf,image_surf):
-       bx = 0
-       by = 0
-       for i in range(0,self.M*self.N):
-           if self.maze[ bx + (by*self.M) ] == 1:
-               display_surf.blit(image_surf,( bx * 44 , by * 44))
-      
-           bx = bx + 1
-           if bx > self.M-1:
-               bx = 0 
-               by = by + 1
-    
+
+def in_fog(row, col, player, fog_radius):
+    return False
+
+
+class Maze:
+    def __init__(self, rows, cols):
+        self.M = rows
+        self.N = cols
+        self.maze = generate_random_maze(self.M, self.N)
+
+    def draw(self, display_surf, player, fog_radius, sprite_wall, sprite_fog, sprite_floor):
+        for row in range(self.M):
+            for col in range(self.N):
+                if in_fog(row, col, player, fog_radius):
+                    display_surf.blit(sprite_fog, (col*44, row*36))
+                elif self.maze[row][col]==1:
+                    display_surf.blit(sprite_wall, (col*44, row*36))
+                else:
+                    display_surf.blit(sprite_floor, (col * 44, row * 36))
+
     def check_empty(self, pos):
-        return True
+        x, y = pos
+        x = int(x/44)
+        y = int(y/36)
+        return self.maze[x][y] == 0
