@@ -15,8 +15,8 @@ class App:
         self._display_surf = None
         self._player_surface = None
         self._block_surf = None
-        self.maze = Maze(30, 30)
-        y, x = self.maze.random_floor_position()
+        self.maze = Maze(20, 20)
+        [(y, x)] = self.maze.random_floor_position()
         self.player = Player(x, y)
         self.monsters = []
 
@@ -32,8 +32,7 @@ class App:
                                                      pygame.HWSURFACE | pygame.RESIZABLE)
         self._player_surface = self._scale_image(self.player.get_surface())
         self._block_surf = self._scale_image(pygame.image.load("art/wall.png"))
-        self._fog1_surf = self._scale_image(pygame.image.load("art/fog1.png"))
-        self._fog2_surf = self._scale_image(pygame.image.load("art/fog2.png"))
+        self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
 
         pygame.display.set_caption('Join Ed To Get Her!')
@@ -52,8 +51,9 @@ class App:
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
         fog1_radius = 100
-        fog2_radius = 200
-        self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, self._fog1_surf, self._fog2_surf, self._floor_surf)
+        fog2_radius = 140
+        alpha=128
+        self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
         self.render_monsters()
         pygame.display.flip()
@@ -101,8 +101,8 @@ class App:
         self._running = False
 
     def _scale_image(self, image):
-        new_width = int(self.WINDOW_WIDTH / 20)
-        new_height = int(self.WINDOW_HEIGHT / 20)
+        new_width = 36#int(self.WINDOW_WIDTH / 20)
+        new_height = 36#int(self.WINDOW_HEIGHT / 20)
         return pygame.transform.smoothscale(image, (new_width, new_height))
 
     def try_movement(self, key, character):
