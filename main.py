@@ -44,7 +44,7 @@ class App:
 
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
-        fog_radius = 100
+        fog_radius = 200
         self.maze.draw(self._display_surf, self.player, fog_radius, self._block_surf, self._fog_surf, self._floor_surf)
         self._display_surf.blit(self._image_surf, (self.player._x, self.player._y))
         pygame.display.flip()

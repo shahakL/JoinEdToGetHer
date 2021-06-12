@@ -31,9 +31,9 @@ class Player:
         elif key is K_LEFT:
             future_x -= 1
         elif key is K_UP:
-            future_y += 1
-        elif key is K_DOWN:
             future_y -= 1
+        elif key is K_DOWN:
+            future_y += 1
         return [future_x, future_y]
 
     def move(self, key):
