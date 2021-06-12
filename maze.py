@@ -22,3 +22,6 @@ class Maze:
            if bx > self.M-1:
                bx = 0 
                by = by + 1
+    
+    def check_empty(self, pos):
+        return True

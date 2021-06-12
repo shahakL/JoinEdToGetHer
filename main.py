@@ -51,15 +51,15 @@ class App:
  
     def handle_key_presses(self):
         keys = pygame.key.get_pressed()
-        actions = {K_RIGHT: partial(self.try_movement, movement=self.player.move_right),
-                    K_LEFT: partial(self.try_movement, movement=self.player.move_left),
-                    K_UP: partial(self.try_movement, movement=self.player.move_up),
-                    K_DOWN: partial(self.try_movement, movement=self.player.move_down),
+        actions = {K_RIGHT: partial(self.try_movement, key=K_RIGHT),
+                    K_LEFT: partial(self.try_movement, key=K_LEFT),
+                    K_UP: partial(self.try_movement, key=K_UP),
+                    K_DOWN: partial(self.try_movement, key=K_DOWN),
                     K_ESCAPE: self._stop}
         
         for key in actions.keys():
             if keys[key]:
-                actions[key](player_pos=self.player.position)
+                actions[key]()
 
 
     def on_execute(self):
@@ -82,8 +82,10 @@ class App:
         new_height = int(self.WINDOW_HEIGHT / 20)
         return pygame.transform.scale(image, (new_width, new_height))
 
-    def try_movement(self, movement, player_pos):
-        movement()
+    def try_movement(self, key):
+        future_pos = self.player.check_future_position(key)
+        if self.maze.check_empty(future_pos):
+            self.player.move(key)
 
  
 if __name__ == "__main__" :
