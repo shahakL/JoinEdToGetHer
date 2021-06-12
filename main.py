@@ -162,11 +162,12 @@ class App:
 
     def show_score(self):
         if self.won:
+            self.level += 1
             bg_color = (250, 200, 200)
             font_color = (255, 0, 0)
-            self.level += 1
             msg = "You Joined Them Together! Press Enter and start level " + str(self.level) + "!"
         else:
+            self.level = 1
             bg_color = (0, 0, 0)
             font_color = (255, 0, 0)
             msg = "You killed Ed! Press Enter to start over..."
