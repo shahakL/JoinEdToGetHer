@@ -5,6 +5,7 @@ from pygame.constants import *
 from ai_character import AICharacter
 import random
 
+
 class Monster(AICharacter):
 
     def __init__(self, x, y, image):

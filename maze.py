@@ -41,8 +41,8 @@ class Maze:
                         display_surf.blit(sprite_floor, (col * self.LX, row * self.LY))
 
         for monster in monsters:
-            is_far = in_fog(monster.position[1], monster.position[0], player, fog1_radius)
-            isnt_too_far = not in_fog(monster.position[1], monster.position[0], player, fog2_radius)
+            is_far = in_fog(monster.position[1], monster.position[0], player, [], fog1_radius)
+            isnt_too_far = not in_fog(monster.position[1], monster.position[0], player, [], fog2_radius)
             if is_far:
                 if isnt_too_far:
                     blit_alpha(display_surf, monster._IMAGE, alpha, monster.position)

@@ -26,9 +26,6 @@ class App:
     def on_init(self):
         pygame.init()
 
-        y, x = self.maze.random_floor_position()[0]
-        self.monsters.append(Monster(x, y))
-
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
                                                      pygame.HWSURFACE | pygame.RESIZABLE)
         self._player_surface = self._scale_image(self.player.get_surface())
@@ -36,6 +33,9 @@ class App:
         self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
         self._monster_surf = self._scale_image(pygame.image.load("art/minotaur.png"))
+
+        y, x = self.maze.random_floor_position()[0]
+        self.monsters.append(Monster(x, y, self._monster_surf))
 
         pygame.display.set_caption('Join Ed To Get Her!')
         pygame.display.set_icon(self._player_surface)
@@ -59,7 +59,7 @@ class App:
         alpha=128
         self.maze.draw(self._display_surf, self.player, self.fireflies, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
-        self.render_monsters()
+        self.render_fireflies()
         pygame.display.flip()
 
     def render_fireflies(self):
