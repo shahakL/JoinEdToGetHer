@@ -1,15 +1,14 @@
 import math
 
 from pygame.constants import *
-import pygame
 from character import Character
 import random
 
 
 class Monster(Character):
 
-    def __init__(self, x, y):
-        super(Monster, self).__init__(x, y, 1, pygame.image.load("art\minotaur.png"))
+    def __init__(self, x, y, image):
+        super(Monster, self).__init__(x, y, 1, image)
         self.ax = 0
         self.ay = 0
         self.vx = 0
@@ -28,5 +27,4 @@ class Monster(Character):
         angle = math.atan2(self.vx,-self.vy)
         pi4 = math.pi/4
         direction = [K_UP, K_LEFT, K_DOWN, K_RIGHT][int(((int(angle / pi4) - 1) % 8) / 2)]
-        print(direction, self.vx, self.vy)
         return direction

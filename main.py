@@ -16,6 +16,7 @@ class App:
         self._display_surf = None
         self._player_surface = None
         self._block_surf = None
+        self._monster_surf = None
         self.maze = Maze(18, 32)
         [(y, x)] = self.maze.random_floor_position()
         self.player = Player(x, y)
@@ -24,8 +25,6 @@ class App:
     def on_init(self):
         pygame.init()
 
-        y, x = self.maze.random_floor_position()[0]
-        self.monsters.append(Monster(x, y))
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
                                                      pygame.HWSURFACE | pygame.RESIZABLE)
@@ -33,9 +32,12 @@ class App:
         self._block_surf = self._scale_image(pygame.image.load("art/wall.png"))
         self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
+        self._monster_surf = self._scale_image(pygame.image.load("art/minotaur.png"))
 
         pygame.display.set_caption('Join Ed To Get Her!')
         pygame.display.set_icon(self._player_surface)
+        y, x = self.maze.random_floor_position()[0]
+        self.monsters.append(Monster(x, y, self._monster_surf))
         self._running = True
 
     def handle_events(self):
@@ -52,14 +54,9 @@ class App:
         fog1_radius = 100
         fog2_radius = 140
         alpha=128
-        self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
+        self.maze.draw(self._display_surf, self.player, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
-        self.render_monsters()
         pygame.display.flip()
-
-    def render_monsters(self):
-        for monster in self.monsters:
-            self._display_surf.blit(self._scale_image(monster.get_surface()), monster.position)
 
     def on_cleanup(self):
         pygame.display.quit()

@@ -1,4 +1,3 @@
-from pygame.constants import *
 import pygame
 from character import Character
 

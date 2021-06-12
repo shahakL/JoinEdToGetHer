@@ -24,7 +24,7 @@ class Maze:
         self.LX = 36
         self.LY = 36
 
-    def draw(self, display_surf, player, fog1_radius, fog2_radius, sprite_wall, alpha, sprite_fog, sprite_floor):
+    def draw(self, display_surf, player, fog1_radius, fog2_radius, sprite_wall, alpha, sprite_fog, sprite_floor, monsters):
         for row in range(self.M):
             for col in range(self.N):
                 if in_fog(self.LY * row, self.LX * col, player, fog2_radius):
@@ -40,12 +40,21 @@ class Maze:
                     else:
                         display_surf.blit(sprite_floor, (col * self.LX, row * self.LY))
 
+        for monster in monsters:
+            is_far = in_fog(monster.position[1], monster.position[0], player, fog1_radius)
+            isnt_too_far = not in_fog(monster.position[1], monster.position[0], player, fog2_radius)
+            if is_far:
+                if isnt_too_far:
+                    blit_alpha(display_surf, monster._IMAGE, alpha, monster.position)
+            else:
+                display_surf.blit(monster._IMAGE, monster.position)
+
     def check_empty(self, pos):
         x, y = pos
         left_up_pos = (y, x)
-        left_down_pos = (y + self.LY - 1, x)
-        right_up_pos = (y, x + self.LX - 1)
-        right_down_pos = (y + self.LY - 1, x + self.LX - 1)
+        left_down_pos = (y + self.LY - 10, x)
+        right_up_pos = (y, x + self.LX - 10)
+        right_down_pos = (y + self.LY - 10, x + self.LX - 10)
         positions = [left_up_pos, left_down_pos, right_up_pos, right_down_pos]
         is_floor = [self.is_floor_at(py, px) for (py, px) in positions]
         return all(is_floor)
