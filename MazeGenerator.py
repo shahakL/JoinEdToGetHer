@@ -43,14 +43,14 @@ def neighbours(maze, cell):
         cells.append((cell[0], cell[1] - 1))
     if cell[1] < len(maze[0]) - 1:
         cells.append((cell[0], cell[1] + 1))
-    if cell[0]<len(maze)-1 and cell[1]<len(maze[0])-1:
-        cells.append((cell[0]+1, cell[1]+1))
-    if cell[0]<len(maze)-1 and cell[1]>0:
-        cells.append((cell[0]+1, cell[1]-1))
-    if cell[0]>0 and cell[1]<len(maze[0])-1:
-        cells.append((cell[0]-1, cell[1]+1))
-    if cell[0]>0 and cell[1]>0:
-        cells.append((cell[0]-1, cell[1]-1))
+    # if cell[0]<len(maze)-1 and cell[1]<len(maze[0])-1:
+    #     cells.append((cell[0]+1, cell[1]+1))
+    # if cell[0]<len(maze)-1 and cell[1]>0:
+    #     cells.append((cell[0]+1, cell[1]-1))
+    # if cell[0]>0 and cell[1]<len(maze[0])-1:
+    #     cells.append((cell[0]-1, cell[1]+1))
+    # if cell[0]>0 and cell[1]>0:
+    #     cells.append((cell[0]-1, cell[1]-1))
     return cells
 
 

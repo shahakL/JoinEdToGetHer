@@ -4,11 +4,11 @@ import pygame
 
 class Character:
 
-    def __init__(self, x, y, image):
+    def __init__(self, x, y, speed, image):
         self._IMAGE = image
         self._x = x
         self._y = y
-        self._speed = 1
+        self._speed = speed
         self._rotated_image = self._IMAGE
  
     def _move_right(self):

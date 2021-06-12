@@ -10,12 +10,13 @@ from maze import Maze
 class App:
 
     def __init__(self):
-
+        self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
+        self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
         self._running = True
         self._display_surf = None
         self._player_surface = None
         self._block_surf = None
-        self.maze = Maze(20, 20)
+        self.maze = Maze(18, 32)
         [(y, x)] = self.maze.random_floor_position()
         self.player = Player(x, y)
         self.monsters = []
@@ -23,8 +24,6 @@ class App:
 
     def on_init(self):
         pygame.init()
-        self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
-        self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
 
         y, x = self.maze.random_floor_position()[0]
         self.monsters.append(Monster(x, y))
