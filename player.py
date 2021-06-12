@@ -1,4 +1,3 @@
-from firefly import FireFly
 from pygame.constants import *
 import pygame
 

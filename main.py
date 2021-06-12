@@ -16,6 +16,7 @@ class App:
         self._display_surf = None
         self._player_surface = None
         self._block_surf = None
+        self._monster_surf = None
         self.maze = Maze(18, 32)
         [(y, x)] = self.maze.random_floor_position()
         self.player = Player(x, y)
@@ -25,15 +26,16 @@ class App:
     def on_init(self):
         pygame.init()
 
-        y, x = self.maze.random_floor_position()[0]
-        self.monsters.append(Monster(x, y))
-
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
                                                      pygame.HWSURFACE | pygame.RESIZABLE)
         self._player_surface = self._scale_image(self.player.get_surface())
         self._block_surf = self._scale_image(pygame.image.load("art/wall.png"))
         self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
+        self._monster_surf = self._scale_image(pygame.image.load("art/minotaur.png"))
+
+        y, x = self.maze.random_floor_position()[0]
+        self.monsters.append(Monster(x, y, image=self._monster_surf))
 
         pygame.display.set_caption('Join Ed To Get Her!')
         pygame.display.set_icon(self._player_surface)
@@ -53,16 +55,11 @@ class App:
         fog1_radius = 100
         fog2_radius = 140
         alpha=128
-        self.maze.draw(self._display_surf, self.player, self.fireflies, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf)
+        self.maze.draw(self._display_surf, self.player, self.fireflies, fog1_radius, fog2_radius, self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
         self._display_surf.blit(self._scale_image(self.player.get_surface()), self.player.position)
-        self.render_monsters()
         self.render_fireflies()
         pygame.display.flip()
 
-    def render_monsters(self):
-        for monster in self.monsters:
-            self._display_surf.blit(self._scale_image(monster.get_surface()), monster.position)
-    
     def render_fireflies(self):
         for firefly in self.fireflies:
             self._display_surf.blit(self._scale_image(firefly.get_surface()), firefly.position)
