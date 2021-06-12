@@ -43,9 +43,9 @@ class Maze:
     def check_empty(self, pos):
         x, y = pos
         left_up_pos = (y, x)
-        left_down_pos = (y + self.LY - 1, x)
-        right_up_pos = (y, x + self.LX - 1)
-        right_down_pos = (y + self.LY - 1, x + self.LX - 1)
+        left_down_pos = (y + self.LY - 10, x)
+        right_up_pos = (y, x + self.LX - 10)
+        right_down_pos = (y + self.LY - 10, x + self.LX - 10)
         positions = [left_up_pos, left_down_pos, right_up_pos, right_down_pos]
         is_floor = [self.is_floor_at(py, px) for (py, px) in positions]
         return all(is_floor)
