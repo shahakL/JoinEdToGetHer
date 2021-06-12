@@ -6,7 +6,7 @@ from MazeGenerator import generate_random_maze, regenerate_random_maze, find_ind
 
 
 def in_fog(y, x, player, fireflies, fog_radius):
-    return all((y - c.position[1]) ** 2 + (x - c.position[0]) ** 2 > fog_radius ** 2 for c in fireflies + [player])
+    return all((y - c.position[1]) ** 2 + (x - c.position[0]) ** 2 > c.light ** 2 for c in fireflies) and (y - player.position[1]) ** 2 + (x - player.position[0]) ** 2 > fog_radius ** 2
 
 
 def blit_alpha(source, target, opacity, location):
