@@ -1,10 +1,19 @@
 import random
 
+import pygame
+
 from MazeGenerator import generate_random_maze, regenerate_random_maze, find_indices
 
 
 def in_fog(y, x, player, fog_radius):
     return (y - player.position[1]) ** 2 + (x - player.position[0]) ** 2 > fog_radius ** 2
+
+
+def blit_alpha(source, target, opacity, location):
+    tmp = target.copy()
+    tmp.convert_alpha()
+    tmp.fill((opacity, opacity, opacity), None, pygame.BLEND_RGB_SUB)
+    source.blit(tmp, location)
 
 
 class Maze:
@@ -15,20 +24,21 @@ class Maze:
         self.LX = 36
         self.LY = 36
 
-    def draw(self, display_surf, player, fog1_radius, fog2_radius, sprite_wall, sprite_fog1, sprite_fog2, sprite_floor):
-        # self.maze = regenerate_random_maze(self.maze)
+    def draw(self, display_surf, player, fog1_radius, fog2_radius, sprite_wall, alpha, sprite_fog, sprite_floor):
         for row in range(self.M):
             for col in range(self.N):
                 if in_fog(self.LY * row, self.LX * col, player, fog2_radius):
-                    display_surf.blit(sprite_fog2, (col * self.LX, row * self.LY))
-                    # self.maze[row][col] = 2
+                    display_surf.blit(sprite_fog, (col * self.LX, row * self.LY))
                 elif in_fog(self.LY * row, self.LX * col, player, fog1_radius):
-                    display_surf.blit(sprite_fog1, (col * self.LX, row * self.LY))
-                    # self.maze[row][col] = 2
-                elif self.maze[row][col] == 1:
-                    display_surf.blit(sprite_wall, (col * self.LX, row * self.LY))
+                    if self.maze[row][col] == 1:
+                        blit_alpha(display_surf, sprite_wall, alpha, (col * self.LX, row * self.LY))
+                    else:
+                        blit_alpha(display_surf, sprite_floor, alpha, (col * self.LX, row * self.LY))
                 else:
-                    display_surf.blit(sprite_floor, (col * self.LX, row * self.LY))
+                    if self.maze[row][col] == 1:
+                        display_surf.blit(sprite_wall, (col * self.LX, row * self.LY))
+                    else:
+                        display_surf.blit(sprite_floor, (col * self.LX, row * self.LY))
 
     def check_empty(self, pos):
         x, y = pos
@@ -43,8 +53,9 @@ class Maze:
     def is_floor_at(self, y, x):
         aligned_y = int(y / self.LY)
         aligned_x = int(x / self.LX)
-        return self.maze[aligned_y][aligned_x] == 0
+        is_valid = 0 <= aligned_y < self.M and 0 <= aligned_x < self.N
+        return is_valid and self.maze[aligned_y][aligned_x] == 0
 
-    def random_floor_position(self):
-        y, x = random.choice(find_indices(self.maze, 0))
-        return y*self.LY, x*self.LX
+    def random_floor_position(self, n=1):
+        ps = random.choices(find_indices(self.maze, 0), k=n)
+        return [(y * self.LY, x * self.LX) for (y, x) in ps]
