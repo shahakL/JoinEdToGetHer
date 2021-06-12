@@ -24,13 +24,12 @@ class App:
         self.won = False
         self.maze = Maze(18, 32)
         [player_pos, princess_pos] = self.maze.random_floor_position(2)
-        self.player = Player(player_pos[1], player_pos[0])
+        self.player = Player(player_pos[1], player_pos[0], self.level)
         self.princess = Princess(princess_pos[1], princess_pos[0],
                                  self._scale_image(pygame.image.load("art/princess.png")))
         self.monsters = []
         self.fireflies = []
 
-    def on_init(self):
         pygame.init()
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
@@ -47,7 +46,6 @@ class App:
 
         pygame.display.set_caption('Join Ed To Get Her!')
         pygame.display.set_icon(self._player_surface)
-        self._running = True
 
     def handle_events(self):
         pygame.event.pump()
@@ -111,6 +109,8 @@ class App:
     def on_execute(self):
         self.on_init()
 
+        self.show_start_screen()
+
         while self._running:
             self.handle_key_presses()
             self.move_characters()
@@ -166,7 +166,7 @@ class App:
             font_color = (255, 0, 0)
             msg = "You killed Ed! Press Enter to start over..."
         self._display_surf.fill(bg_color)
-        myfont = pygame.font.SysFont("Comic Sans MS", 30)
+        myfont = pygame.font.SysFont("Papyrus", 30)
         label = myfont.render(msg, 1, font_color)
         self._display_surf.blit(label, (self.WINDOW_WIDTH * 0.01, self.WINDOW_HEIGHT * 0.9))
         pygame.display.flip()
@@ -181,6 +181,26 @@ class App:
                         done = True
         self.on_execute()
 
+    def show_start_screen(self):
+        black = (0,0,0)
+        self._display_surf.fill(black)
+        title = pygame.font.SysFont("Blackadder ITC", 100)
+        font_color = (255, 0, 0)
+        label = title.render("Join Ed To Get Her", 1, font_color)
+        self._display_surf.blit(label, (self.WINDOW_WIDTH * 0.1, self.WINDOW_HEIGHT * 0.3))
+        subtitle = pygame.font.SysFont("Papyrus", 50)
+        label = subtitle.render("press Enter to start level 1", 1, font_color)
+        self._display_surf.blit(label, (self.WINDOW_WIDTH * 0.1, self.WINDOW_HEIGHT * 0.6))
+        pygame.display.flip()
+        done = False
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    done = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        done = True
 
 
 if __name__ == "__main__":
