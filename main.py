@@ -14,6 +14,7 @@ class App:
         self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
         self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
         self._running = True
+        self.won = False
         self._display_surf = None
         self._player_surface = None
         self._block_surf = None
@@ -110,12 +111,13 @@ class App:
         while self._running:
             self.handle_key_presses()
             self.move_characters()
-            self.handle_end_cases()
 
             self.handle_events()
 
             self.on_loop()
             self.on_render()
+            self.handle_end_cases()
+        self.show_score()
         self.on_cleanup()
 
     def _stop(self, *args, **kwargs):
@@ -136,12 +138,44 @@ class App:
 
     def handle_end_cases(self):
         if any([self.are_touching(monster, self.player) for monster in self.monsters]):
-            print('YOU LOSE!')
+            self._running = False
+            self.won = False
         elif self.are_touching(self.princess, self.player):
-            print('YOU WIN!')
+            self._running = False
+            self.won = True
 
     def are_touching(self, c1, c2):
-        return c1.position == c2.position
+        l = 20
+        share_x = c1.position[0] <= c2.position[0] <= (c1.position[0] + l) or \
+                  c2.position[0] <= c1.position[0] <= (c2.position[0] + l)
+        share_y = c1.position[1] <= c2.position[1] <= (c1.position[1] + l) or \
+                  c2.position[1] <= c1.position[1] <= (c2.position[1] + l)
+        return share_x and share_y
+
+    def show_score(self):
+        if self.won:
+            bg_color = (250, 200, 200)
+            font_color = (255, 0, 0)
+            msg = "You Joined Them Together!"
+        else:
+            bg_color = (0, 0, 0)
+            font_color = (255, 0, 0)
+            msg = "You killed Ed..."
+        self._display_surf.fill(bg_color)
+        myfont = pygame.font.SysFont("Comic Sans MS", 30)
+        label = myfont.render(msg+"     Press space bar to play again", 1, font_color)
+        self._display_surf.blit(label, (self.WINDOW_WIDTH * 0.01, self.WINDOW_HEIGHT * 0.9))
+        pygame.display.flip()
+        done = False
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    done = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        done = True
+
 
 
 if __name__ == "__main__":
