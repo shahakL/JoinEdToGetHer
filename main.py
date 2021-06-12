@@ -30,14 +30,14 @@ class App:
         pygame.init()
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
-                                                     pygame.HWSURFACE | pygame.RESIZABLE)
+                                                      pygame.HWSURFACE | pygame.RESIZABLE)
         self._player_surface = self._scale_image(self.player.get_surface())
         self._block_surf = self._scale_image(pygame.image.load("art/wall.png"))
         self._fog_surf = self._scale_image(pygame.image.load("art/fog.png"))
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
         self._monster_surf = self._scale_image(pygame.image.load("art/minotaur.png"))
 
-        positions = self.maze.random_floor_position(50)
+        positions = self.maze.random_floor_position(5)
         for (y, x) in positions:
             self.monsters.append(Monster(x, y, image=self._monster_surf))
 
@@ -91,7 +91,7 @@ class App:
         if pnv:
             self.try_movement(pnv, self.princess)
         for monster in self.monsters:
-            next_move = monster.get_next_move()
+            next_move = monster.get_next_move(self.player.position)
             if next_move:
                 self.try_movement(next_move, monster)
         for i, firefly in enumerate(self.fireflies):
