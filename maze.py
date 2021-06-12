@@ -1,4 +1,6 @@
-from MazeGenerator import generate_random_maze, regenerate_random_maze
+import random
+
+from MazeGenerator import generate_random_maze, regenerate_random_maze, find_indices
 
 
 def in_fog(y, x, player, fog_radius):
@@ -13,13 +15,16 @@ class Maze:
         self.LX = 44
         self.LY = 36
 
-    def draw(self, display_surf, player, fog_radius, sprite_wall, sprite_fog, sprite_floor):
-        self.maze = regenerate_random_maze(self.maze)
+    def draw(self, display_surf, player, fog1_radius, fog2_radius, sprite_wall, sprite_fog1, sprite_fog2, sprite_floor):
+        # self.maze = regenerate_random_maze(self.maze)
         for row in range(self.M):
             for col in range(self.N):
-                if in_fog(self.LY * row, self.LX * col, player, fog_radius):
-                    display_surf.blit(sprite_fog, (col * self.LX, row * self.LY))
-                    self.maze[row][col] = 2
+                if in_fog(self.LY * row, self.LX * col, player, fog2_radius):
+                    display_surf.blit(sprite_fog2, (col * self.LX, row * self.LY))
+                    # self.maze[row][col] = 2
+                elif in_fog(self.LY * row, self.LX * col, player, fog1_radius):
+                    display_surf.blit(sprite_fog1, (col * self.LX, row * self.LY))
+                    # self.maze[row][col] = 2
                 elif self.maze[row][col] == 1:
                     display_surf.blit(sprite_wall, (col * self.LX, row * self.LY))
                 else:
@@ -40,3 +45,7 @@ class Maze:
         aligned_y = int(y / self.LY)
         aligned_x = int(x / self.LX)
         return self.maze[aligned_y][aligned_x] == 0
+
+    def random_floor_position(self):
+        y, x = random.choice(find_indices(self.maze, 0))
+        return y*self.LY, x*self.LX

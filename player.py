@@ -5,10 +5,10 @@ import pygame
 class Player:
 
     _PLAYER_IMAGE = pygame.image.load("art\survivor-idle_shotgun_0.png")
-    def __init__(self):
-        self._x = 44
-        self._y = 44
-        self._speed = 0.3
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+        self._speed = 3
         self._rotated_image = self._PLAYER_IMAGE
  
     def _move_right(self):
