@@ -13,12 +13,15 @@ class App:
     def __init__(self):
         self.WINDOW_WIDTH = 1280  # pygame.display.Info().current_w
         self.WINDOW_HEIGHT = 720  # pygame.display.Info().current_h
-        self._running = True
-        self.won = False
         self._display_surf = None
         self._player_surface = None
         self._block_surf = None
         self._monster_surf = None
+        self.level = 1
+
+    def on_init(self):
+        self._running = True
+        self.won = False
         self.maze = Maze(18, 32)
         [player_pos, princess_pos] = self.maze.random_floor_position(2)
         self.player = Player(player_pos[1], player_pos[0])
@@ -26,8 +29,6 @@ class App:
                                  self._scale_image(pygame.image.load("art/princess.png")))
         self.monsters = []
         self.fireflies = []
-
-    def on_init(self):
         pygame.init()
 
         self._display_surf = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT),
@@ -38,7 +39,7 @@ class App:
         self._floor_surf = self._scale_image(pygame.image.load("art/floor.png"))
         self._monster_surf = self._scale_image(pygame.image.load("art/minotaur.png"))
 
-        positions = self.maze.random_floor_position(10)
+        positions = self.maze.random_floor_position(self.level)
         for (y, x) in positions:
             self.monsters.append(Monster(x, y, image=self._monster_surf))
 
@@ -156,14 +157,15 @@ class App:
         if self.won:
             bg_color = (250, 200, 200)
             font_color = (255, 0, 0)
-            msg = "You Joined Them Together!"
+            self.level += 1
+            msg = "You Joined Them Together! Press Enter and start level " + str(self.level) + "!"
         else:
             bg_color = (0, 0, 0)
             font_color = (255, 0, 0)
-            msg = "You killed Ed..."
+            msg = "You killed Ed! Press Enter to start over..."
         self._display_surf.fill(bg_color)
         myfont = pygame.font.SysFont("Comic Sans MS", 30)
-        label = myfont.render(msg+"     Press space bar to play again", 1, font_color)
+        label = myfont.render(msg, 1, font_color)
         self._display_surf.blit(label, (self.WINDOW_WIDTH * 0.01, self.WINDOW_HEIGHT * 0.9))
         pygame.display.flip()
         done = False
@@ -173,8 +175,9 @@ class App:
                     self.running = False
                     done = True
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_RETURN:
                         done = True
+        self.on_execute()
 
 
 
