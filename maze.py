@@ -2,7 +2,7 @@ from MazeGenerator import generate_random_maze
 
 
 def in_fog(row, col, player, fog_radius):
-    return False
+    return (row*36-player.position[0])**2+(col*44-player.position[0])**2>fog_radius**2
 
 
 class Maze:
