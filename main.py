@@ -61,8 +61,8 @@ class App:
 
     def on_render(self):
         self._display_surf.fill((0, 0, 0))
-        fog1_radius = 100
-        fog2_radius = 140
+        fog1_radius = max(100, 100*(5-self.level))
+        fog2_radius = fog1_radius+40
         alpha = 128
         self.maze.draw(self._display_surf, self.player, self.princess, self.fireflies, fog1_radius, fog2_radius,
                        self._block_surf, alpha, self._fog_surf, self._floor_surf, self.monsters)
